@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root{
+    --primary:#E2E2E2;
+    --secondary:#212153;
+    --success:#45D375;
+    --female:#EFB3B3;
+    --standard:#C9D6DD;
+}
+
+.text-primary{
+    color: var(--primary);
+}
+
+.bg-primary{
+    background-color: var(--primary);
+}
+
+.text-secondary{
+    color: var(--secondary);
+}
+
+.bg-secondary{
+    background-color: var(--secondary);
+}
+
+.text-success{
+    color: var(--success);
+}
+
+.bg-success{
+    background-color: var(--success);
+}
+
+.text-female{
+    color: var(--female);
+}
+
+.bg-female{
+    background-color: var(--female);
+}
+
+.text-standard{
+    color: var(--standard);
+}
+
+.bg-standard{
+    background-color: var(--standard);
+}   
