@@ -21,7 +21,7 @@
 }
 
 .bg-secondary{
-    background-color: var(--secondary);
+    background:linear-gradient(to bottom right, #203a79, #0a1839);
 }
 
 .text-success{
