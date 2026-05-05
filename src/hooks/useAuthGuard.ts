@@ -2,11 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 export const useAuthGuard = () => {
   const [user, setUser] = useState<any>(null);
-  const navigate = useNavigate();
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export const useAuthGuard = () => {
 
     if (!storedUser) {
       toast.error("Session expired. Please login again.");
-      navigate("/login");
+      router.push("/login");
       return;
     }
 
@@ -26,7 +25,7 @@ export const useAuthGuard = () => {
     } catch (error) {
       console.error("Invalid user data in session storage");
       sessionStorage.removeItem("currentUser");
-      navigate("/login");
+      router.push("/login");
     }
   }, [router]);
 

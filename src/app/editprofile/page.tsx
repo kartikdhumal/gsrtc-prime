@@ -15,10 +15,10 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Loader from '../loaders/Loader';
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
 
 const Profile = () => { 
-    const navigate = useNavigate();
+    const router = useRouter();
+    
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
 
@@ -40,9 +40,9 @@ const Profile = () => {
             }
         } else {
             toast.error("Please login to view your profile.");
-            navigate("/login");
+            router.push("/login");
         }
-    }, [navigate]);
+    }, [router]);
 
 
 const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,7 +139,7 @@ const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
             sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
             toast.success("Profile updated successfully!");
-            navigates("/admindashboard");
+            router.push("/admindashboard");
 
         } catch (error) {
             console.error("Profile update error:", error);

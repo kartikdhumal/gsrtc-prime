@@ -1,100 +1,38 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Box, TextField, Button, Typography } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import toast, { Toaster } from "react-hot-toast";
 import emailjs from "emailjs-com";
-import { useNavigate } from "react-router-dom";
 
 const SendEmail = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);  
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error("Please enter your email");
-      return;
-    }
+    if (!email) return toast.error("Please enter your email");
     setIsLoading(true);
-
     try {
-      const res = await fetch("/api/auth/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
+      const res = await fetch("/api/auth/send-otp", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
       const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || "User not found");
-        setIsLoading(false);
-        return;
-      }
-
-      const otpCode = data.otp;
-
-      await emailjs.send(
-        "service_ekhgoiq",
-        "template_bei6puv",
-        {
-          to_email: email,
-          message: otpCode,
-        },
-        "UotkyMsCOj0Jq6E4g"
-      );
-
+      if (!res.ok) return toast.error(data.message || "User not found");
+      await emailjs.send("service_ekhgoiq", "template_bei6puv", { to_email: email, message: data.otp }, "UotkyMsCOj0Jq6E4g");
       toast.success(`OTP sent successfully! Check your email ${email}`);
-
-      navigate(`/verifyotp?email=${encodeURIComponent(email)}`);
-
-    } catch (error) {
-      console.error(error);
+      router.push(`/verifyotp?email=${encodeURIComponent(email)}`);
+    } catch {
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-      <Box
-        sx={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          justifyContent: "center", minHeight: "100vh", bgcolor: "background.default",
-        }}
-      >
-        <Toaster />
-        <Box
-          sx={{
-            width: { xs: "90%", sm: "400px" }, p: 4, borderRadius: "16px",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", bgcolor: "background.paper",
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h6" sx={{ mb: 2, color: "text.primary" }}>
-            Forgot Password
-          </Typography>
-          <Box component="form" onSubmit={handleSendOTP}>
-            <TextField
-              fullWidth label="Enter your email" variant="filled" margin="normal" type="email"
-              value={email} onChange={(e) => setEmail(e.target.value)}
-              sx={{ bgcolor: "#e3e3e3", borderRadius: "8px" }} disabled={isLoading}
-            />
-            <Button
-              type="submit" fullWidth variant="contained" disabled={isLoading}
-              sx={{
-                mt: 2, p: 1.5, bgcolor: "primary.main", borderRadius: "8px",
-                "&:hover": { bgcolor: "#343478" },
-              }}
-            >
-              {isLoading ? 'Sending...' : 'Send OTP'}
-            </Button>
-          </Box>
-        </Box>
-      </Box>
-  );
+  return <div className="flex min-h-screen items-center justify-center bg-[#E3E3E3] p-4"><Toaster />
+    <form onSubmit={handleSendOTP} className="w-full max-w-md rounded-2xl bg-white p-6 shadow">
+      <h1 className="mb-4 text-center text-xl font-semibold">Forgot Password</h1>
+      <input className="w-full rounded-lg border px-3 py-2" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Enter your email" disabled={isLoading} />
+      <button disabled={isLoading} className="mt-4 w-full rounded-lg bg-[#212153] py-2 font-semibold text-white hover:bg-[#343478]">{isLoading?"Sending...":"Send OTP"}</button>
+    </form></div>;
 };
 
 export default SendEmail;
