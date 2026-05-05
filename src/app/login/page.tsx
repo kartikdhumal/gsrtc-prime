@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom'
 
 // Loading spinner component
 const LoadingSpinner = () => (
@@ -35,7 +34,7 @@ const Login = () => {
   const [password, setPassword] = React.useState('');
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
-  const navigate = useNavigate();
+  
   
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -73,9 +72,9 @@ const Login = () => {
       toast.success("Login successful");
 
       if (data.user.role === "admin") {
-        navigate("/admindashboard");
+        router.push("/admindashboard");
       } else {
-        navigate("/home");
+        router.push("/home");
       }
 
     } catch (error) {
